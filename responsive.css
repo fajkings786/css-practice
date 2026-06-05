@@ -1,0 +1,323 @@
+@media screen and (max-width: 1024px) {
+    .container {
+        padding: 20px 30px;
+    }
+
+    /* Adjust "How it works" layout */
+    .main-flex {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 60px 30px;
+    }
+
+    .work, section.img {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .work h1 {
+        font-size: 2.5rem;
+    }
+
+    .for-gap, .parts {
+        width: 100%;
+    }
+    
+    .parts {
+        justify-content: center;
+    }
+}
+
+/* Mobile Devices (max-width: 768px) */
+@media screen and (max-width: 768px) {
+    /* General Reset */
+    html, body {
+        font-size: 14px;
+        overflow-x: hidden;
+    }
+
+    .container {
+        padding: 15px;
+        height: auto;
+    }
+
+    /* Navigation */
+    nav {
+        flex-direction: column;
+        gap: 15px;
+        padding-bottom: 15px;
+    }
+
+    nav .logo img {
+        width: 160px;
+    }
+
+    nav ul i {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    nav ul i li a {
+        font-size: 13px;
+    }
+
+    /* Hide secondary links on small mobile to prevent overcrowding */
+    @media screen and (max-width: 480px) {
+        nav ul i li:nth-child(1),
+        nav ul i li:nth-child(2) {
+            display: none;
+        }
+        nav ul i button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Hero Section */
+    main {
+        margin-top: 50px;
+    }
+
+    .flex {
+        flex-direction: column;
+        gap: 40px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .left, .right {
+        width: 100%;
+    }
+
+    .right img {
+        width: 100%;
+        height: auto;
+        max-height: 350px;
+        object-fit: contain;
+    }
+
+    main .flex section.left .heading {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+
+    main .flex section.left .description {
+        font-size: 1rem;
+        padding: 0 10px;
+    }
+
+    main .flex section.left {
+        align-items: center;
+    }
+
+    main .flex section.left .red,
+    main .flex section.left .white {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    /* Features Banner */
+    .features {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        padding: 30px 20px;
+    }
+
+    /* Testimonials (Card Section) */
+    .card-section {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .card-section .card {
+        width: 100%;
+        padding: 25px;
+    }
+
+    /* Logos Section */
+    .logos {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .logos .logo {
+        width: 45%;
+        padding: 20px;
+    }
+
+    .logos .logo img {
+        width: 100%;
+    }
+
+    /* "Why Choose Us" & "For Companies" (Benefits & Images) */
+    .needing-main {
+        gap: 50px;
+        margin-bottom: 50px;
+        align-items: center;
+    }
+
+    .needing-main .heading {
+        width: 100%;
+        font-size: 1.8rem;
+    }
+
+    .needing-main .flex {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .benefits, .img {
+        width: 100%;
+    }
+
+    .benefits h1 {
+        font-size: 1.4rem;
+    }
+    
+    .benefits .black {
+        font-size: 1.8rem;
+    }
+
+    /* Fast Track Section */
+    .fast-track .text h1 {
+        width: 100%;
+        font-size: 1.6rem;
+    }
+
+    .fast-track .text h1 span.text-pro {
+        font-size: 1.2rem;
+    }
+
+    .paragraph {
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .flex-cards {
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+
+    .card {
+        width: 100%;
+    }
+
+    /* Pro Pricing Section */
+    .pro-section {
+        margin-top: 50px;
+        gap: 40px;
+    }
+
+    .pro-section .button-group {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+    }
+
+    .pro-section .button-group button {
+        width: 100%;
+        border-radius: 8px;
+        border-bottom: 1px solid #E5E5E5;
+    }
+
+    .pro-section .button-group .individuals {
+        border-right: none;
+        border-bottom: 1px solid #E5E5E5;
+    }
+
+    .pro-section .main-card-pro-section {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .card-pro-section {
+        width: 100%;
+    }
+
+    /* Adjust ribbon (Best Value) for mobile */
+    .card-pro-section .border {
+        width: 100%;
+        top: -25px;
+        left: 0;
+    }
+
+    .card-pro-section .features-pro-section .check-pro-section h3 {
+        font-size: 1rem;
+    }
+
+    /* Company Logos */
+    .company-logos .images {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    /* Card Carousel (Testimonials) */
+    .card-carousel {
+        padding: 40px 15px;
+    }
+
+    .card-carousel .flex-icons {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+
+    .card-carousel .flex-icons .icons {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .main-card-carousel {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .carousel-cards .cards {
+        width: 100%;
+        padding: 30px 15px;
+    }
+
+    /* Final CTA Section */
+    .final-section .text h1 {
+        font-size: 2rem;
+        width: 100%;
+    }
+
+    .final-section .text p {
+        font-size: 1rem;
+        width: 100%;
+    }
+
+    /* Footer */
+    .footer-top {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 50px 20px;
+        gap: 40px;
+    }
+
+    .footer-brand img {
+        margin: 0 auto 20px auto;
+    }
+    
+    .footer-brand p {
+        margin: 0 auto 20px auto;
+    }
+    
+    .social-icons {
+        justify-content: center;
+    }
+
+    .footer-links {
+        align-items: center;
+    }
+}
