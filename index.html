@@ -4,533 +4,988 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="responsive.css">
-    <title>website | through css</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Frontend Mentor | Premium Experience</title>
+    
+    <!-- Font Awesome 6.4.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            /* Refined Modern Color Palette */
+            --primary: #4F46E5; 
+            --primary-dark: #4338CA; 
+            --primary-light: #A5B4FC;
+            --accent: #EC4899; 
+            --accent-glow: rgba(236, 72, 153, 0.4);
+            
+            /* Neutrals */
+            --dark: #0F172A;
+            --dark-surface: #1E293B;
+            --light: #F8FAFC;
+            --white: #ffffff;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            
+            /* Gradients */
+            --gradient-main: linear-gradient(135deg, var(--primary) 0%, #7C3AED 100%);
+            --gradient-text: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            --gradient-cta: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --shadow-hover: 0 25px 50px -12px rgba(79, 70, 229, 0.15);
+            --glow-primary: 0 0 20px rgba(79, 70, 229, 0.2);
+
+            --font-main: 'Inter', sans-serif;
+            --font-display: 'Outfit', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            width: 100%;
+            background-color: var(--light);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- BACKGROUND PATTERNS --- */
+        .bg-grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(226, 232, 240, 0.4) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(226, 232, 240, 0.4) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .bg-noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.04; z-index: -1; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--white); z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        .loader-svg { width: 80px; height: auto; }
+        .loader-svg path {
+            fill: none; stroke: var(--primary); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round;
+            stroke-dasharray: 400; stroke-dashoffset: 400; animation: drawLine 1.5s cubic-bezier(0.37, 0, 0.63, 1) forwards;
+        }
+        .loader-text {
+            margin-top: 20px; font-weight: 700; letter-spacing: 4px; color: var(--dark);
+            font-size: 0.8rem; opacity: 0; animation: fadeIn 0.5s ease 1.2s forwards;
+        }
+        @keyframes drawLine { to { stroke-dashoffset: 0; } }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* --- GLOBAL UTILITIES --- */
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; }
+        a { text-decoration: none; color: inherit; transition: 0.3s ease; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+
+        /* Ripple Effect */
+        span.ripple {
+            position: absolute; border-radius: 50%; transform: scale(0);
+            animation: ripple 600ms linear; background-color: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+        }
+        @keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+        /* --- IMPROVED NAVIGATION --- */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            padding: 20px 0; transition: all 0.4s ease;
+        }
+        
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.05); 
+            padding: 12px 0; 
+            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05);
+        }
+
+        nav { display: flex; align-items: center; justify-content: space-between; }
+        
+        .logo img { width: 150px; filter: brightness(0); transition: 0.3s; }
+        header.scrolled .logo img { filter: none; }
+        
+        /* Desktop Menu */
+        .nav-links { display: flex; align-items: center; gap: 40px; }
+        
+        .nav-item { position: relative; }
+        
+        .nav-link {
+            color: var(--text-main); font-size: 14.5px; font-weight: 600; display: flex; align-items: center; gap: 6px;
+            padding: 8px 0; position: relative; cursor: pointer;
+        }
+
+        .nav-link i.arrow { font-size: 12px; transition: transform 0.3s ease; }
+        .nav-item:hover .nav-link i.arrow { transform: rotate(180deg); }
+        
+        /* Underline Animation */
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 0;
+            background: var(--gradient-main); transition: width 0.3s ease; border-radius: 2px;
+        }
+        .nav-item:hover .nav-link::after { width: 100%; }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(10px);
+            background: var(--white); width: 220px; padding: 12px;
+            border-radius: 16px; box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.05);
+            opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: 100;
+        }
+
+        .nav-item:hover .dropdown {
+            opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown li a {
+            display: block; padding: 10px 16px; font-size: 14px; font-weight: 500; color: var(--text-muted);
+            border-radius: 8px; transition: 0.2s;
+        }
+
+        .dropdown li a:hover {
+            background: #F1F5F9; color: var(--primary); padding-left: 20px; /* Slight slide effect */
+        }
+
+        /* Pro Badge */
+        .pro {
+            background: var(--gradient-main); color: #fff; padding: 4px 10px; border-radius: 8px;
+            font-size: 10px; font-weight: 800; letter-spacing: 0.5px; 
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
+        }
+
+        /* Header Buttons */
+        .btn-header {
+            padding: 10px 24px; border-radius: 50px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+        }
+        
+        .btn-login {
+            background: transparent; border: 1px solid #E2E8F0; color: var(--dark);
+        }
+        .btn-login:hover {
+            border-color: var(--primary); color: var(--primary); background: #EEF2FF;
+        }
+
+        /* Mobile Toggle */
+        .mobile-toggle { display: none; font-size: 24px; color: var(--dark); cursor: pointer; z-index: 1001; }
+
+        /* --- BUTTONS (Global) --- */
+        .btn {
+            background-color: var(--dark); color: #fff; border: none; padding: 14px 28px;
+            border-radius: 50px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px;
+            font-weight: 600; position: relative; overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2); }
+        
+        .btn-primary { background: var(--gradient-main); border: none; color: #fff; }
+        .btn-primary:hover { box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.4); }
+
+        .btn-outline {
+            background-color: rgba(255, 255, 255, 0.8); color: var(--dark);
+            border: 1px solid rgba(0,0,0,0.1); backdrop-filter: blur(4px);
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-outline:hover { background-color: #fff; border-color: var(--primary); color: var(--primary); }
+
+        /* --- HERO SECTION --- */
+        main { margin-top: 80px; overflow: hidden; }
+        .hero-wrapper { position: relative; padding: 120px 0 80px 0; }
+
+        .blob {
+            position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.6; z-index: -1;
+            animation: moveBlob 12s infinite alternate ease-in-out;
+        }
+        .blob-1 { width: 500px; height: 500px; background: #818CF8; top: -150px; right: -150px; }
+        .blob-2 { width: 400px; height: 400px; background: #F472B6; bottom: 0; left: -100px; animation-delay: -6s; }
+        @keyframes moveBlob { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(40px, 60px) scale(1.1); } }
+
+        .hero-flex { display: flex; align-items: center; justify-content: space-between; gap: 80px; }
+        .left { width: 50%; display: flex; flex-direction: column; gap: 24px; }
+
+        .hero-label {
+            font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); font-weight: 700;
+            display: inline-block; background: rgba(79, 70, 229, 0.08); padding: 8px 16px; border-radius: 30px; width: fit-content;
+        }
+
+        .heading {
+            font-family: var(--font-display); font-size: 4rem; color: var(--dark); line-height: 1.05;
+            font-weight: 700; letter-spacing: -1.5px;
+        }
+
+        .description { font-size: 1.25rem; color: var(--text-muted); line-height: 1.7; max-width: 90%; }
+        .description span { color: var(--primary); font-weight: 700; background: rgba(79, 70, 229, 0.08); padding: 2px 8px; border-radius: 4px; }
+
+        .hero-btns { display: flex; gap: 16px; margin-top: 16px; }
+        .right { width: 50%; position: relative; }
+
+        .hero-img-container {
+            position: relative; border-radius: 24px; padding: 12px;
+            background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border); box-shadow: var(--shadow-hover);
+            transform-style: preserve-3d; transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+            transition: transform 0.1s ease-out;
+        }
+        .hero-img-container img { border-radius: 16px; width: 100%; height: auto; display: block; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+
+        /* --- FEATURES BANNER --- */
+        .features-banner {
+            margin: 60px auto 100px; display: flex; align-items: center; justify-content: space-between;
+            padding: 30px 40px; background: var(--white); border: 1px solid rgba(0,0,0,0.05);
+            color: var(--dark); border-radius: 24px; box-shadow: var(--shadow-lg); position: relative; overflow: hidden;
+        }
+        .features-banner::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            transform: skewX(-20deg); animation: shine 8s infinite;
+        }
+        @keyframes shine { 0%, 80% { left: -100%; } 100% { left: 200%; } }
+        .banner-content h3 { font-size: 1.4rem; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+        .banner-content h3 i { color: var(--primary); background: #EEF2FF; padding: 8px; border-radius: 8px; }
+        .banner-content p { font-size: 1rem; color: var(--text-muted); margin-left: 48px; }
+
+        /* --- TESTIMONIALS --- */
+        .card-section { display: flex; align-items: stretch; gap: 30px; margin-bottom: 120px; }
+        .card {
+            flex: 1; background: var(--white); border-radius: 24px; padding: 40px;
+            border: 1px solid rgba(0,0,0,0.05); box-shadow: var(--shadow-md);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-8px); box-shadow: var(--shadow-hover); border-color: rgba(79, 70, 229, 0.2); }
+        
+        .card .header p { font-size: 1.15rem; font-style: italic; color: var(--text-main); line-height: 1.7; position: relative; z-index: 1; }
+        .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 30px; }
+        .card-info { display: flex; align-items: center; gap: 16px; }
+        .card-info img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: var(--shadow-sm); }
+        .name p:first-child { font-weight: 700; color: var(--dark); font-size: 1rem; }
+        .name p:last-child { font-size: 0.85rem; color: var(--text-muted); }
+        .icon i { font-size: 40px; color: rgba(79, 70, 229, 0.1); transform: rotate(180deg); }
+
+        /* --- LOGOS --- */
+        .logos-section { text-align: center; margin-bottom: 140px; }
+        .logos-section p { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1.5px; margin-bottom: 40px; }
+        .logos { display: flex; justify-content: center; gap: 80px; opacity: 0.5; filter: grayscale(100%); transition: 0.5s; }
+        .logos:hover { opacity: 1; filter: grayscale(0%); transform: scale(1.05); }
+        .logos img { height: 32px; width: auto; }
+
+        /* --- HOW IT WORKS --- */
+        .main-flex {
+            display: flex; align-items: center; gap: 60px; background: var(--white); padding: 60px; border-radius: 32px;
+            margin-bottom: 140px; box-shadow: var(--shadow-lg); border: 1px solid rgba(0,0,0,0.03);
+        }
+        .work { width: 50%; display: flex; flex-direction: column; gap: 40px; }
+        .work h1 { font-family: var(--font-display); font-size: 2.5rem; color: var(--dark); }
+
+        .steps-container { display: flex; flex-direction: column; gap: 16px; }
+        
+        .step-card {
+            background: #fff; padding: 20px 24px; border-radius: 16px; display: flex; align-items: center; gap: 20px;
+            transition: all 0.3s ease; border: 1px solid #E2E8F0; cursor: pointer; position: relative; z-index: 1;
+        }
+        .step-card:hover { transform: scale(1.02) translateX(10px); border-color: var(--primary); box-shadow: var(--shadow-md); }
+        
+        .step-card.active-step { 
+            background: var(--gradient-main); border-color: transparent; box-shadow: 0 10px 30px -5px rgba(79, 70, 229, 0.3);
+            transform: scale(1.03) translateX(15px);
+        }
+        
+        .step-card.active-step .count { background: #fff; color: var(--primary); border-color: #fff; }
+        .step-card.active-step .text { color: #fff; }
+        .step-card.active-step .paragraph-description { color: rgba(255,255,255,0.9); }
+
+        .count {
+            width: 40px; height: 40px; border-radius: 12px; background: #fff; color: var(--text-muted);
+            border: 2px solid #E2E8F0; display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 1.1rem; flex-shrink: 0; transition: 0.3s;
+        }
+        .text-content { display: flex; flex-direction: column; }
+        .text { font-weight: 700; font-size: 1.1rem; color: var(--dark); transition: 0.3s; }
+        .paragraph-description { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; transition: 0.3s; }
+
+        .img-col { width: 50%; position: relative; display: flex; flex-direction: column; align-items: center; }
+        .img-frame {
+            border-radius: 20px; overflow: hidden; box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0,0,0,0.05); width: 100%; position: relative; background: #fff;
+        }
+        .img-frame img { width: 100%; height: auto; display: block; transition: opacity 0.4s ease; }
+        .visual-details { margin-top: 30px; text-align: center; max-width: 90%; }
+        .visual-details h3 { color: var(--dark); font-size: 1.25rem; margin-bottom: 8px; }
+        .visual-details p { color: var(--text-muted); line-height: 1.6; font-size: 0.95rem; }
+
+        /* --- WHY DEVELOPERS CHOOSE --- */
+        .needing-main { margin-bottom: 140px; }
+        .section-title { text-align: center; font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 100px; color: var(--dark); }
+        .benefit-row { display: flex; align-items: center; gap: 100px; margin-bottom: 120px; }
+        .benefit-row:nth-child(even) { flex-direction: row-reverse; }
+        .benefits { flex: 1; }
+        .benefits h2 { font-size: 2.2rem; color: var(--dark); margin-bottom: 24px; line-height: 1.2; }
+        .benefits p { font-size: 1.1rem; color: var(--text-muted); line-height: 1.8; }
+        .img { flex: 1; position: relative; }
+        .img img { border-radius: 24px; box-shadow: var(--shadow-lg); }
+        .deco-circle { position: absolute; border-radius: 50%; background: var(--primary); opacity: 0.1; z-index: -1; }
+
+        /* --- FAST TRACK (PRO CARDS - FIXED & IMPROVED) --- */
+        .fast-track { text-align: center; margin-bottom: 140px; position: relative; }
+        .fast-track h1 { font-size: 2.5rem; margin-bottom: 24px; color: var(--dark); }
+        .text-pro { background: var(--gradient-main); color: #fff; padding: 4px 12px; border-radius: 8px; font-size: 0.8em; vertical-align: middle; margin-left: 5px; display: inline-block; }
+        .fast-track p { max-width: 600px; margin: 0 auto 60px auto; color: var(--text-muted); font-size: 1.15rem; line-height: 1.6; }
+
+        .flex-cards { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
+        
+        .pro-card {
+            flex: 1; background: #fff; border: 1px solid #F1F5F9; padding: 40px 30px; border-radius: 24px;
+            text-align: left; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 350px; min-width: 300px; position: relative; overflow: hidden;
+        }
+        
+        .pro-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--gradient-main); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+        }
+
+        .pro-card:hover {
+            transform: translateY(-12px); box-shadow: var(--shadow-hover); border-color: rgba(79, 70, 229, 0.2);
+        }
+        .pro-card:hover::before { transform: scaleX(1); }
+
+        .pro-card .icon-box { 
+            width: 64px; height: 64px; background: #EEF2FF; color: var(--primary); 
+            display: flex; align-items: center; justify-content: center; border-radius: 16px; 
+            margin-bottom: 28px; font-size: 1.8rem; 
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative; z-index: 2;
+        }
+        
+        .pro-card:hover .icon-box { 
+            background: var(--gradient-main); 
+            color: #fff; 
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
+        }
+        
+        .pro-card h3 { font-size: 1.3rem; margin-bottom: 16px; color: var(--dark); font-weight: 700; }
+        .pro-card p { color: var(--text-muted); line-height: 1.7; font-size: 1rem; }
+
+        /* --- PRICING --- */
+        .pro-section { margin-bottom: 140px; }
+        
+        .button-group { 
+            display: flex; justify-content: center; gap: 0; margin-bottom: 60px; background: #F1F5F9; padding: 6px; 
+            border-radius: 50px; width: fit-content; margin-left: auto; margin-right: auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .btn-toggle { 
+            padding: 12px 36px; border-radius: 40px; border: none; background: transparent; font-weight: 600; cursor: pointer; 
+            transition: 0.3s; color: var(--text-muted); position: relative; z-index: 2;
+        }
+        
+        .btn-toggle.active { background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.08); color: var(--primary); }
+
+        .pricing-container { position: relative; min-height: 500px; }
+        .pricing-wrapper { 
+            display: flex; justify-content: center; gap: 40px; position: absolute; top: 0; left: 0; width: 100%;
+            opacity: 0; visibility: hidden; transition: opacity 0.4s ease, transform 0.4s ease; transform: translateY(10px);
+        }
+        .pricing-wrapper.active { opacity: 1; visibility: visible; transform: translateY(0); position: relative; }
+        
+        .price-card {
+            width: 380px; border: 1px solid #F1F5F9; border-radius: 24px; padding: 50px 40px;
+            text-align: center; position: relative; background: #fff; transition: 0.3s;
+        }
+        .price-card.featured { 
+            border: 2px solid var(--primary); transform: scale(1.05); 
+            box-shadow: 0 0 30px rgba(79, 70, 229, 0.15); 
+            background: linear-gradient(to bottom, #fff 0%, #F5F3FF 100%);
+        }
+        .price-badge { 
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%); background: var(--dark); 
+            color: #fff; padding: 8px 24px; border-radius: 30px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .price { font-size: 3.5rem; font-weight: 800; color: var(--dark); font-family: var(--font-display); letter-spacing: -2px; }
+        .price-sub { text-decoration: line-through; color: #CBD5E1; font-size: 1.1rem; }
+        .bill-cycle { color: var(--text-muted); margin-bottom: 24px; font-size: 0.9rem; }
+
+        .discount-tag { 
+            background: #DCFCE7; color: #166534; padding: 6px 12px; border-radius: 8px; display: inline-flex; 
+            align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; margin-bottom: 30px; 
+        }
+        .off-tag { background: #166534; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+
+        .features-list { text-align: left; margin: 30px 0; }
+        .features-list li { margin-bottom: 16px; display: flex; align-items: flex-start; gap: 12px; color: #475569; font-size: 0.95rem; }
+        .features-list i { color: var(--primary); background: #EEF2FF; padding: 4px; border-radius: 50%; font-size: 10px; margin-top: 5px; }
+
+        /* --- HORIZONTAL CAROUSEL --- */
+        .card-carousel {
+            background: #fff; padding: 100px 0; margin-bottom: 140px; border-radius: 32px; 
+            box-shadow: var(--shadow-lg); border: 1px solid #F1F5F9; position: relative; overflow: hidden;
+        }
+        .carousel-header { 
+            display: flex; justify-content: center; align-items: center; padding: 0 60px 40px 60px; 
+            border-bottom: 1px solid #F1F5F9; margin-bottom: 40px;
+        }
+        .carousel-track { display: flex; gap: 30px; padding: 0 60px; width: max-content; }
+        
+        .review-card {
+            width: 380px; background: #F8FAFC; padding: 40px; border-radius: 20px; border: 1px solid #F1F5F9; transition: 0.3s;
+        }
+        .review-card:hover { background: #fff; box-shadow: var(--shadow-md); border-color: var(--primary-light); transform: translateY(-5px); }
+        
+        .review-text { font-size: 1.05rem; color: var(--text-main); margin-bottom: 25px; line-height: 1.7; font-style: italic; }
+        .reviewer { display: flex; align-items: center; gap: 16px; }
+        .reviewer img { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #fff; box-shadow: var(--shadow-sm); }
+        .reviewer-info h4 { color: var(--primary); font-size: 1.1rem; margin-bottom: 2px; font-weight: 700; }
+        .reviewer-info p { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* --- FINAL CTA --- */
+        .final-section {
+            background: var(--gradient-cta); color: #fff; padding: 120px 40px; text-align: center;
+            border-radius: 32px; margin-bottom: 140px; position: relative; overflow: hidden;
+            box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.5); border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .final-section::before {
+            content: ''; position: absolute; top: -20%; left: -10%; width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%); border-radius: 50%; z-index: 0;
+        }
+        .final-section::after {
+            content: ''; position: absolute; bottom: -20%; right: -10%; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%); border-radius: 50%; z-index: 0;
+        }
+
+        .final-section .text { position: relative; z-index: 1; }
+        .final-section h1 { 
+            font-family: var(--font-display); font-size: 3.2rem; margin-bottom: 24px; 
+            background: linear-gradient(to right, #fff, #e0e7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .final-section p { font-size: 1.25rem; color: #C7D2FE; max-width: 650px; margin: 0 auto 40px auto; line-height: 1.7; }
+
+        .btn-glow {
+            background: #fff; color: var(--primary); box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        .btn-glow:hover { background: var(--primary-light); color: #fff; box-shadow: 0 0 30px rgba(99, 102, 241, 0.6); transform: scale(1.05); }
+
+        /* --- FOOTER --- */
+        .last-footer {
+            background: var(--dark-surface); color: #fff; padding: 80px 40px 40px 40px; 
+            border-radius: 32px 32px 0 0; border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+        .footer-brand img { filter: brightness(0) invert(1); margin-bottom: 24px; width: 140px; }
+        .footer-brand p { color: #94A3B8; margin-bottom: 32px; max-width: 300px; line-height: 1.7; }
+        .social-icons { display: flex; gap: 16px; }
+        .social-icons a { width: 44px; height: 44px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; border-radius: 12px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+        .social-icons a:hover { background: var(--primary); border-color: var(--primary); transform: translateY(-5px); color: #fff; }
+
+        .footer-links h3 { margin-bottom: 24px; font-size: 1.1rem; color: #fff; }
+        .footer-links ul li { margin-bottom: 16px; }
+        .footer-links a { color: #94A3B8; font-size: 0.95rem; transition: 0.3s; }
+        .footer-links a:hover { color: #fff; padding-left: 5px; }
+
+        .footer-bottom { text-align: center; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); color: #64748B; font-size: 0.9rem; }
+
+        /* --- MOBILE MENU STYLES (NEW) --- */
+        .mobile-menu-overlay {
+            position: fixed; top: 0; right: -100%; width: 100%; height: 100vh;
+            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);
+            z-index: 999; transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+
+        .mobile-menu-overlay.active { right: 0; }
+
+        .mobile-nav-links {
+            display: flex; flex-direction: column; gap: 24px; text-align: center; width: 100%;
+        }
+
+        .mobile-nav-link {
+            font-size: 1.5rem; font-weight: 700; color: var(--dark); position: relative;
+        }
+
+        .mobile-actions {
+            margin-top: 40px; display: flex; flex-direction: column; gap: 16px; width: 80%;
+        }
+
+        .close-menu {
+            position: absolute; top: 30px; right: 30px; font-size: 2rem; cursor: pointer; color: var(--dark);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 1024px) {
+            .hero-flex { flex-direction: column; text-align: center; gap: 60px; padding-top: 40px; }
+            .left, .right { width: 100%; }
+            .hero-btns { justify-content: center; }
+            .description { margin: 0 auto; }
+            .main-flex { flex-direction: column; padding: 40px; gap: 40px; }
+            .work, .img-col { width: 100%; }
+            .benefit-row { flex-direction: column !important; gap: 50px; }
+            .pricing-wrapper { flex-direction: column; align-items: center; }
+            .price-card.featured { transform: scale(1); width: 100%; max-width: 400px; }
+            .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+            
+            /* Responsive Navbar */
+            .nav-links { display: none; } /* Hide desktop menu */
+            .mobile-toggle { display: block; } /* Show hamburger */
+        }
+
+        @media (max-width: 768px) {
+            .heading { font-size: 2.5rem; }
+            .card-section { flex-direction: column; }
+            .features-banner { flex-direction: column; text-align: center; gap: 20px; }
+            .banner-content p { margin-left: 0; }
+            .footer-top { grid-template-columns: 1fr; text-align: center; }
+            .social-icons { justify-content: center; }
+            .carousel-header { padding: 0 20px 20px 20px; flex-direction: column; align-items: flex-start; gap: 20px; }
+            .carousel-track { padding: 0 20px; }
+            .final-section h1 { font-size: 2.2rem; }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container">
-        <header>
+
+    <!-- Backgrounds -->
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <svg class="loader-svg" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 10 H50 V50 H20 Z" />
+            <path d="M70 10 H90 V50 H70 Z" />
+            <path d="M100 10 H120 V50 H100 Z" />
+            <path d="M130 10 H150 V50 H130 Z" />
+            <path d="M170 10 L180 50 L190 10" />
+        </svg>
+        <div class="loader-text">LOADING EXPERIENCE</div>
+    </div>
+
+    <!-- IMPROVED HEADER -->
+    <header>
+        <div class="container">
             <nav>
                 <div class="logo">
-                    <img src="https://www.frontendmentor.io/images/logo-desktop.svg" alt="not found">
+                    <img src="https://www.frontendmentor.io/images/logo-desktop.svg" alt="Frontend Mentor">
                 </div>
-                <ul>
-                    <i>
 
-                        <li><a href="#"> Explore <span><i class="fa-solid fa-angle-down"></i></span></a></li>
-                        <li><a href="#">For Companies <span><i class="fa-solid fa-angle-down"></i></span></a></li>
-                        <li id="unlock-pro"><a href="#">Unlock <span class="pro">PRO</span></a></li>
-                        <button><i>Log in with github</i> <span><i class="fa-brands fa-github"></i></button>
-                    </i>
+                <!-- Desktop Navigation -->
+                <ul class="nav-links">
+                    <li class="nav-item">
+                        <span class="nav-link">Explore <i class="fa-solid fa-angle-down arrow"></i></span>
+                        <ul class="dropdown">
+                            <li><a href="#">Challenges</a></li>
+                            <li><a href="#">Solutions</a></li>
+                            <li><a href="#">Resources</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <span class="nav-link">For Companies <i class="fa-solid fa-angle-down arrow"></i></span>
+                        <ul class="dropdown">
+                            <li><a href="#">Why Us?</a></li>
+                            <li><a href="#">Success Stories</a></li>
+                            <li><a href="#">Pricing</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Unlock <span class="pro">PRO</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-header btn-login">Log in <i class="fa-brands fa-github"></i></button>
+                    </li>
                 </ul>
 
+                <!-- Mobile Hamburger -->
+                <div class="mobile-toggle" onclick="toggleMobileMenu()">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
             </nav>
-        </header>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenu">
+        <div class="close-menu" onclick="toggleMobileMenu()">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="#" class="mobile-nav-link">Explore</a>
+            <a href="#" class="mobile-nav-link">For Companies</a>
+            <a href="#" class="mobile-nav-link" style="color: var(--primary);">Unlock PRO</a>
+        </div>
+        <div class="mobile-actions">
+            <button class="btn btn-primary" style="width: 100%; justify-content: center;">Sign up free</button>
+            <button class="btn btn-outline" style="width: 100%; justify-content: center;">Log in</button>
+        </div>
+    </div>
+
+    <div class="container">
         <main>
-            <div class="flex">
-                <section class="left">
-                    <h2><i>For learners</i></h2>
-                    <p class="heading">Front-end and full-stack coding challenges that build real skills and help get
-                        you hired</p>
-                    <p class="description">Frontend Mentor provides professional design-to-code challenges that mirror
-                        real-world
-                        development work. Join <span>1,166,078</span> developers building portfolio projects that
-                        impress employers.</p>
-                    <button class="red"><i>Start Building Free</i> <span><i class="fa-brands fa-github"></i></button>
-                    <button class="white"><i>Browse challenges</i></button>
-                </section>
-                <section class="right">
-                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-hero.webp&w=3840&q=100"
-                        alt="not found">
-                </section>
+            <!-- Hero Section -->
+            <div class="hero-wrapper">
+                <div class="blob blob-1"></div>
+                <div class="blob blob-2"></div>
+
+                <div class="hero-flex">
+                    <section class="left hero-content">
+                        <p class="hero-label anim-text">For learners</p>
+                        <h1 class="heading anim-text">Front-end challenges that build <span style="background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">real skills</span></h1>
+                        <p class="description anim-text">Join <span>1,166,078</span> developers building portfolio projects that impress employers. Real-world development work starts here.</p>
+                        <div class="hero-btns anim-text">
+                            <button class="btn btn-primary ripple-btn">Start Building Free <i class="fa-brands fa-github"></i></button>
+                            <button class="btn btn-outline ripple-btn">Browse challenges</button>
+                        </div>
+                    </section>
+                    <section class="right hero-img">
+                        <div class="hero-img-container" id="heroImageContainer">
+                            <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-hero.webp&w=3840&q=100" alt="Hero Dashboard">
+                        </div>
+                    </section>
+                </div>
             </div>
 
-
-
-            <section class="features">
-                <div class="one">
-                    <h3>Get AI-powered feedback on every solution submission</h3>
-                    <p>Join thousands of developers getting personalized insights with every submission to level up
-                        faster.</p>
+            <!-- Features Banner -->
+            <section class="features-banner gsap-fade-up">
+                <div class="banner-content">
+                    <h3><i class="fa-solid fa-wand-magic-sparkles"></i> AI-powered feedback</h3>
+                    <p>Get personalized insights on every submission.</p>
                 </div>
-                <div class="two">
-                    <button class="white">Learn About pro</button>
-                </div>
+                <button class="btn btn-primary ripple-btn">Learn About Pro</button>
             </section>
 
-
+            <!-- Testimonials -->
             <section class="card-section">
-                <div class="card">
+                <div class="card gsap-stagger-card">
                     <div class="header">
-                        <p>"I highly recommend Frontend Mentor. Skip the search for project ideas and dive into
-                            ready-made
-                            challenges that help you level up as a developer."
-                        </p>
+                        <p>"I highly recommend Frontend Mentor. Skip the search for project ideas and dive into ready-made challenges."</p>
                     </div>
-                    <div class="footer">
+                    <div class="card-footer">
                         <div class="card-info">
-                            <img src="	https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-kevin.webp&w=128&q=75"
-                                alt="">
+                            <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-kevin.webp&w=128&q=75" alt="Kevin Powell">
                             <div class="name">
-                                <p><i>Kevin Powell</i></p>
-                                <p>Web Developer & YouTuber</p>
+                                <p>Kevin Powell</p>
+                                <p>YouTuber</p>
                             </div>
                         </div>
                         <div class="icon">
-                            <i class="fa fa-quote-left" aria-hidden="true"></i>
+                            <i class="fa-solid fa-quote-left"></i>
                         </div>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card gsap-stagger-card">
                     <div class="header">
-                        <p>"Frontend Mentor is a win-win. You can sharpen your skills building websites and add finished
-                            projects to your portfolio to help land a job!"
-
-                        </p>
+                        <p>"Frontend Mentor is a win-win. You can sharpen your skills and add finished projects to your portfolio."</p>
                     </div>
-                    <div class="footer">
+                    <div class="card-footer">
                         <div class="card-info">
-                            <img src="	https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-jessica.webp&w=64&q=75"
-                                alt="">
+                            <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-jessica.webp&w=64&q=75" alt="Jessica Chan">
                             <div class="name">
-                                <p><i>Jessica Chan</i></p>
-                                <p>Web Developer & YouTuber</p>
+                                <p>Jessica Chan</p>
+                                <p>Web Developer</p>
                             </div>
                         </div>
                         <div class="icon">
-                            <i class="fa fa-quote-left" aria-hidden="true"></i>
+                            <i class="fa-solid fa-quote-left"></i>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="logos-section">
+            <!-- Logos -->
+            <section class="logos-section gsap-fade-up">
                 <p>As featured on...</p>
                 <div class="logos">
-                    <div class="logo">
-                        <img src="https://www.frontendmentor.io/images/logo-css-tricks.svg" alt="not foudn">
-                    </div>
-                    <div class="logo">
-                        <img src="https://www.frontendmentor.io/images/logo-stack-overflow.svg" alt="not foudn">
-                    </div>
-                    <div class="logo">
-                        <img src="https://www.frontendmentor.io/images/logo-product-hunt.svg" alt="not foudn">
-                    </div>
+                    <div class="logo"><img src="https://www.frontendmentor.io/images/logo-css-tricks.svg" alt=""></div>
+                    <div class="logo"><img src="https://www.frontendmentor.io/images/logo-stack-overflow.svg" alt=""></div>
+                    <div class="logo"><img src="https://www.frontendmentor.io/images/logo-product-hunt.svg" alt=""></div>
                 </div>
             </section>
 
+            <!-- How it works -->
             <div class="main-flex">
                 <section class="work">
                     <h1>How it works</h1>
-                    <div class="for-gap">
-                        <div class="count-text-main">
-                            <div class="count"><i>1</i></div>
-                            <div class="text">Choose your challenge</div>
+                    <div class="steps-container" id="stepsContainer">
+                        <div class="step-card active-step" 
+                             data-img="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-how-it-works-1.webp&w=1200&q=100"
+                             data-title="Choose your challenge"
+                             data-desc="Browse our library of 100+ professionally designed challenges. Filter by difficulty or technology to find the perfect fit for your skill level.">
+                            <div class="count">1</div>
+                            <div class="text-content">
+                                <div class="text">Choose your challenge</div>
+                                <div class="paragraph-description">Pick from 100+ professionally designed projects.</div>
+                            </div>
                         </div>
-                        <div class="paragraph-description">
-                            <p>Pick from 100+ professionally designed projects across five skill levels—from HTML/CSS
-                                basics to full-stack applications.</p>
+                        <div class="step-card" 
+                             data-img="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-how-it-works-2.webp&w=1200&q=100"
+                             data-title="Code the design"
+                             data-desc="Download the assets and style guide. Use HTML, CSS, and JavaScript to translate the design into a fully functional website. Focus on accessibility and responsiveness.">
+                            <div class="count">2</div>
+                            <div class="text-content">
+                                <div class="text">Code the design</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="parts">
-                        <div class="count aqua"><i>2</i></div>
-                        <div class="text">Code the design</div>
-                    </div>
-                    <div class="parts">
-                        <div class="count aqua"><i>3</i></div>
-                        <div class="text">Submit and improve</div>
-                    </div>
-                    <div class="parts">
-                        <div class="count aqua"><i>4</i></div>
-                        <div class="text">Help others grow</div>
+                        <div class="step-card" 
+                             data-img="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-how-it-works-3.webp&w=1200&q=100"
+                             data-title="Submit and improve"
+                             data-desc="Submit your solution to the community. Get feedback from other developers, spot improvements, and refine your code to perfection.">
+                            <div class="count">3</div>
+                            <div class="text-content">
+                                <div class="text">Submit and improve</div>
+                            </div>
+                        </div>
+                        <div class="step-card" 
+                             data-img="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-how-it-works-4.webp&w=1200&q=100"
+                             data-title="Help others grow"
+                             data-desc="Review submissions from other learners. Teaching is the best way to learn, and helping others reinforces your own understanding.">
+                            <div class="count">4</div>
+                            <div class="text-content">
+                                <div class="text">Help others grow</div>
+                            </div>
+                        </div>
                     </div>
                 </section>
-                <section class="img">
-                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-how-it-works-4.webp&w=1200&q=100"
-                        alt="not found">
+                
+                <section class="img-col">
+                    <div class="deco-circle" style="width: 300px; height: 300px; top: -20px; right: -20px; background: var(--accent);"></div>
+                    <div class="img-frame">
+                        <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-how-it-works-1.webp&w=1200&q=100" alt="How it works" id="stepImage">
+                    </div>
+                    <div class="visual-details">
+                        <h3 id="stepTitle">Choose your challenge</h3>
+                        <p id="stepDesc">Browse our library of 100+ professionally designed challenges. Filter by difficulty or technology to find the perfect fit for your skill level.</p>
+                    </div>
                 </section>
             </div>
 
-
+            <!-- Why Choose Us -->
             <section class="needing-main">
-                <h1 class="heading">Why developers choose Frontend Mentor</h1>
-                <div class="flex">
+                <h1 class="section-title">Why developers choose us</h1>
+                
+                <div class="benefit-row gsap-fade-up">
                     <div class="benefits">
-                        <h1>Move beyond passive learning</h1>
-                        <p>Stop watching and start creating. Build professional-quality projects that develop genuine
-                            coding
-                            skills through hands-on practice.
-                        </p>
+                        <h2>Move beyond <span style="color: var(--primary);">passive learning</span></h2>
+                        <p>Stop watching and start creating. Build professional-quality projects that develop genuine coding skills through hands-on practice.</p>
                     </div>
                     <div class="img">
-                        <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-why-1.webp&w=1200&q=75"
-                            alt="not found">
-                    </div>
-                </div>
-                <div class="flex">
-                    <div class="img">
-                        <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-why-2.webp&w=1200&q=75"
-                            alt="not found">
-                    </div>
-                    <div class="benefits">
-                        <h1>Create a portfolio that gets you hired</h1>
-                        <p>Build impressive projects with professional designs. Recruiters tell us these portfolio
-                            pieces consistently "wow" them in interviews by demonstrating real-world capabilities.
-                        </p>
+                        <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-why-1.webp&w=1200&q=75" alt="">
                     </div>
                 </div>
 
-                <div class="flex">
-                    <div class="benefits">
-                        <h1>Master AI-powered development workflows
-                        </h1>
-                        <p>Practice with AI tools that 76% of developers use daily. Learn to work effectively with
-                            Cursor, GitHub Copilot, ChatGPT, and other assistants while maintaining code quality and
-                            problem-solving skills.
-                        </p>
-                    </div>
+                <div class="benefit-row gsap-fade-up">
+                    <div class="deco-circle" style="width: 200px; height: 200px; bottom: -50px; left: -50px; background: var(--primary);"></div>
                     <div class="img">
-                        <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-why-3.webp&w=1200&q=75"
-                            alt="not found">
-                    </div>
-                </div>
-
-
-
-                <div class="flex">
-                    <div class="img">
-                        <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-why-4.webp&w=1200&q=75"
-                            alt="not found">
+                        <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-why-2.webp&w=1200&q=75" alt="">
                     </div>
                     <div class="benefits">
-                        <h1>Join a supportive developer community</h1>
-                        <p>Connect with peers for code reviews, career advice, and friendship. Beat imposter syndrome
-                            alongside developers who understand your journey, guided by mentors who've walked this path.
-                        </p>
+                        <h2>Create a portfolio that <span style="color: var(--accent);">gets you hired</span></h2>
+                        <p>Recruiters tell us these portfolio pieces consistently "wow" them in interviews by demonstrating real-world capabilities.</p>
                     </div>
                 </div>
             </section>
 
-
-
-
+            <!-- Pro Section -->
             <section class="fast-track">
                 <div class="text">
-                    <h1>Fast-track your developer career with <span class="text-pro">Pro</span></h1>
+                    <h1>Fast-track your career with <span class="text-pro">Pro</span></h1>
                 </div>
                 <div class="paragraph">
-                    <p>Get AI-powered feedback on every solution, build portfolio-worthy projects, and master
-                        professional workflows with complete Figma files—everything you need to level up faster.
-
-                    </p>
+                    <p>Get AI-powered feedback on every solution, build portfolio-worthy projects, and master professional workflows with complete Figma files.</p>
                 </div>
                 <div class="flex-cards">
-                    <div class="card">
-                        <div class="header">
-                            <i aria-hidden="true" class="fa-regular fa-comment text-blue-500 text-2xl"></i>
-                        </div>
-                        <div class="body">
-                            <h2>Level up faster with AI-powered feedback</h2>
-                            <p>Our AI-enhanced reports spot up to 3x more improvement opportunities on every submission,
-                                giving you personalized insights that help you level up faster.</p>
-                        </div>
+                    <div class="pro-card gsap-stagger-card">
+                        <div class="icon-box"><i class="fa-regular fa-comment-dots"></i></div>
+                        <h3>AI-powered feedback</h3>
+                        <p>Spot up to 3x more improvement opportunities on every submission with personalized insights.</p>
                     </div>
-                    <div class="card">
-                        <div class="header">
-                            <i aria-hidden="true" class="fa-solid fa-briefcase text-blue-500 text-2xl"></i>
-                        </div>
-                        <div class="body">
-                            <h2>Build portfolio projects that get you hired</h2>
-                            <p>Create multi-page websites, interactive dashboards, and full-stack applications with
-                                premium challenges that make your portfolio stand out to employers.</p>
-                        </div>
+                    <div class="pro-card gsap-stagger-card">
+                        <div class="icon-box"><i class="fa-solid fa-layer-group"></i></div>
+                        <h3>Portfolio projects</h3>
+                        <p>Create multi-page websites and full-stack applications with premium challenges.</p>
                     </div>
-                    <div class="card">
-                        <div class="header">
-                            <i aria-hidden="true" class="fa-solid fa-code text-blue-500 text-2xl"></i>
-                        </div>
-                        <div class="body">
-                            <h2>Master the design-to-code workflow pros use</h2>
-                            <p>Learn to translate Figma designs into pixel-perfect code using the same detailed specs
-                                and professional workflow that developers use in real teams .</p>
-                        </div>
+                    <div class="pro-card gsap-stagger-card">
+                        <div class="icon-box"><i class="fa-solid fa-pen-ruler"></i></div>
+                        <h3>Design-to-code workflow</h3>
+                        <p>Learn to translate Figma designs into pixel-perfect code using professional specs.</p>
                     </div>
                 </div>
             </section>
 
-
-
+            <!-- Pricing -->
             <section class="pro-section">
                 <div class="button-group">
-                    <button class="individuals">For individuals</button>
-                    <button class="teams">For teams</button>
+                    <button class="btn-toggle active" onclick="togglePricing('individuals')">For individuals</button>
+                    <button class="btn-toggle" onclick="togglePricing('teams')">For teams</button>
                 </div>
-                <div class="main-card-pro-section">
-
-
-                    <div class="card-pro-section">
-                        <div class="text-pro-section">
-                            <p class="month-paragraph">Monthly</p>
-                            <p class="underline">$12/month</p>
-                            <p class="total-price">$4.80/mo</p>
-                            <p class="bill-monthly">Billed monthly</p>
+                
+                <div class="pricing-container">
+                    <!-- Individuals Pricing -->
+                    <div class="pricing-wrapper active" id="pricing-individuals">
+                        <div class="price-card gsap-stagger-card">
+                            <h3 class="month-paragraph">Monthly</h3>
+                            <div class="price-sub">$12/month</div>
+                            <div class="price">$4.80</div>
+                            <p class="bill-cycle">Billed monthly</p>
+                            <div class="discount-tag">
+                                <span>PK Country Discount</span>
+                                <span class="off-tag">60% off</span>
+                            </div>
+                            <button class="btn btn-primary ripple-btn" style="width: 100%; justify-content: center;">Start Pro</button>
+                            <ul class="features-list">
+                                <li><i class="fa-solid fa-check"></i> Free challenges</li>
+                                <li><i class="fa-solid fa-check"></i> AI-powered feedback</li>
+                                <li><i class="fa-solid fa-check"></i> 5 Figma files/month</li>
+                            </ul>
                         </div>
-                        <div class="discount">
-                            <h6 class="country">PK</h6>
-                            <h3 class="country-discount">Country Discount</h3>
-                            <h3 class="discount-percentage">60% off</h3>
-                            <span>Applied</span>
-                        </div>
-                        <button class="btn-learn">Learn More</button>
-                        <div class="features-pro-section">
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <p>Free challenges</p>
+
+                        <div class="price-card featured gsap-stagger-card">
+                            <div class="price-badge">Best value</div>
+                            <h3 class="month-paragraph">Yearly</h3>
+                            <div class="price-sub">$8 /month</div>
+                            <div class="price">$3.20</div>
+                            <p class="bill-cycle">$38.40 billed yearly</p>
+                            <div class="discount-tag">
+                                <span>PK Country Discount</span>
+                                <span class="off-tag">60% off</span>
                             </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <h3>AI-powered solution feedback</h3>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <h3>5 Figma design files/month</h3>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <h3>2 premium challenges/month</h3>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <p>Private solutions</p>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <p>Custom solution domains</p>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <p>View challenges solutions early</p>
-                            </div>
+                            <button class="btn btn-primary ripple-btn" style="width: 100%; justify-content: center;">Start Pro</button>
+                            <ul class="features-list">
+                                <li><i class="fa-solid fa-check"></i> Free challenges</li>
+                                <li><i class="fa-solid fa-check"></i> AI-powered feedback</li>
+                                <li><i class="fa-solid fa-check"></i> 5 Figma files/month</li>
+                                <li><i class="fa-solid fa-check"></i> 2 Premium challenges</li>
+                                <li><i class="fa-solid fa-check"></i> Private solutions</li>
+                            </ul>
                         </div>
                     </div>
 
+                    <!-- Teams Pricing -->
+                    <div class="pricing-wrapper" id="pricing-teams">
+                        <div class="price-card gsap-stagger-card">
+                            <h3 class="month-paragraph">Starter Team</h3>
+                            <div class="price-sub">$15/user</div>
+                            <div class="price">$9</div>
+                            <p class="bill-cycle">per user, billed monthly</p>
+                            <button class="btn btn-primary ripple-btn" style="width: 100%; justify-content: center;">Start Team Trial</button>
+                            <ul class="features-list">
+                                <li><i class="fa-solid fa-check"></i> Everything in Pro</li>
+                                <li><i class="fa-solid fa-check"></i> Team dashboard</li>
+                                <li><i class="fa-solid fa-check"></i> Progress tracking</li>
+                            </ul>
+                        </div>
 
-                    <div class="card-pro-section border">
-                        <div class="border">
-                            <p>Best value</p>
-                        </div>
-                        <div class="text-pro-section">
-                            <p class="month-paragraph">Yearly</p>
-                            <p class="underline">$8 /month</p>
-                            <p class="total-price">$3.20/mo</p>
-                            <p class="month-paragraph size">$38.40 billed yearly (save 33% vs monthly)</p>
-                        </div>
-                        <div class="discount">
-                            <h6 class="country">PK</h6>
-                            <h3 class="country-discount">Country Discount</h3>
-                            <h3 class="discount-percentage">60% off</h3>
-                            <span>Applied</span>
-                        </div>
-                        <button class="btn-learn">Learn More</button>
-                        <div class="features-pro-section">
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <p>Free challenges</p>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <h3>AI-powered solution feedback</h3>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <h3>5 Figma design files/month</h3>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <h3>2 premium challenges/month</h3>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <p>Private solutions</p>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <p>Custom solution domains</p>
-                            </div>
-                            <div class="check-pro-section">
-                                <i class="fa-solid fa-check"></i>
-                                <p>View challenges solutions early</p>
-                            </div>
+                        <div class="price-card featured gsap-stagger-card">
+                            <div class="price-badge">For Companies</div>
+                            <h3 class="month-paragraph">Enterprise</h3>
+                            <div class="price">Custom</div>
+                            <p class="bill-cycle">Contact sales for volume pricing</p>
+                            <button class="btn btn-outline ripple-btn" style="width: 100%; justify-content: center;">Contact Sales</button>
+                            <ul class="features-list">
+                                <li><i class="fa-solid fa-check"></i> SSO & Security</li>
+                                <li><i class="fa-solid fa-check"></i> Dedicated success manager</li>
+                                <li><i class="fa-solid fa-check"></i> Custom challenge paths</li>
+                                <li><i class="fa-solid fa-check"></i> API Access</li>
+                            </ul>
                         </div>
                     </div>
-
-
                 </div>
             </section>
 
-            <section class="company-logos">
-                <div class="images">
-                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fvisa.png&w=128&q=75"
-                        alt="not found">
-                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fmastercard.png&w=128&q=75"
-                        alt="not found">
-                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Famex.png&w=128&q=75"
-                        alt="not found">
-                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fmaestro.png&w=128&q=75"
-                        alt="not found">
-                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fpaypal.png&w=128&q=75"
-                        alt="not found">
-                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fgpay.png&w=128&q=75"
-                        alt="not found">
-                </div>
-            </section>
-
-
-
-            <section class="company">
-                <section class="needing-main">
-                    <h1 class="heading">For companies </h1>
-                    <div class="flex">
-                        <div class="benefits">
-                            <h1>Engineering teams</h1>
-                            <h1 class="black">Train junior developers with real projects</h1>
-                            <p>Skip theoretical tutorials. Give your junior developers 100+ real-world challenges that
-                                build practical skills faster than traditional training programs.
-                            </p>
-                            <button>Explore teams</button>
-                        </div>
-                        <div class="img">
-                            <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-why-1.webp&w=1200&q=75"
-                                alt="not found">
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="img">
-                            <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-why-2.webp&w=1200&q=75"
-                                alt="not found">
-                        </div>
-                        <div class="benefits">
-                            <h1>Hiring teams</h1>
-                            <h1 class="black">Discover junior talent through skills, not resumes</h1>
-                            <p>See real code and live projects upfront, then connect directly with developers who've
-                                demonstrated the skills and passion you need. </p>
-                            <button>Explore Hiring</button>
-                        </div>
-                    </div>
-                </section>
-            </section>
-
-
-
+            <!-- Horizontal Carousel -->
             <section class="card-carousel">
-                <div class="flex-icons">
-                    <div class="text">
-                        <h1>A little ❤️ from our community</h1>
-                    </div>
-                    <div class="icons">
-                        <button aria-label="Scroll to previous" class="scroll-btn" disabled>
-                            <i aria-hidden="true" class="fa-solid fa-arrow-left"></i>
-                        </button>
-                        <button aria-label="Scroll to previous" class="scroll-btn">
-                            <i aria-hidden="true" class="fa-solid fa-arrow-right text-white text-xl"></i>
-                        </button>
-                    </div>
+                <div class="carousel-header">
+                    <h1>A little ❤️ from our community</h1>
                 </div>
-                <div class="main-card-carousel">
-
-                    <div class="carousel-cards">
-                        <div class="cards">
-                            <div class="text">
-                                <p>This platform provides everything developers need to improve their skills. The
-                                    community is great, and the challenges keep me motivated, instill accountability
-                                    through regular submissions, and allow me to build a professional portfolio by
-                                    showcasing diverse projects.</p>
-                            </div>
-
-                            <div class="flex-image-section-with-text">
-                                <div class="image">
-                                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-francesca.webp&w=128&q=75"
-                                        alt="not found">
-                                </div>
-                                <div class="top-heading">
-                                    <p class="with-color">Francesca</p>
+                
+                <div class="carousel-track-wrapper" style="overflow-x: auto; width: 100%; scrollbar-width: none; -ms-overflow-style: none;">
+                    <div class="carousel-track">
+                        <div class="review-card">
+                            <p class="review-text">"This platform provides everything developers need to improve their skills. The community is great, and the challenges keep me motivated."</p>
+                            <div class="reviewer">
+                                <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-francesca.webp&w=128&q=75" alt="">
+                                <div class="reviewer-info">
+                                    <h4>Francesca</h4>
                                     <p>@frrann</p>
                                 </div>
                             </div>
                         </div>
-
-                    </div>
-                    <div class="carousel-cards">
-                        <div class="cards">
-                            <div class="text">
-                                <p>Frontend Mentor eliminated the hurdle of sourcing designs, letting me focus on
-                                    development. Their professional projects, especially in the Pro subscription,
-                                    challenge me to create complex, multi-page websites. With a supportive community and
-                                    feedback from advanced programmers, my skills have been elevated to new heights.</p>
-                            </div>
-
-                            <div class="flex-image-section-with-text">
-                                <div class="image">
-                                    <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-francesca.webp&w=128&q=75"
-                                        alt="not found">
-                                </div>
-                                <div class="top-heading">
-                                    <p class="with-color">Alfie</p>
+                        <div class="review-card">
+                            <p class="review-text">"Frontend Mentor eliminated the hurdle of sourcing designs, letting me focus on development. The Pro subscription challenges are complex and rewarding."</p>
+                            <div class="reviewer">
+                                <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-francesca.webp&w=128&q=75" alt="">
+                                <div class="reviewer-info">
+                                    <h4>Alfie</h4>
                                     <p>@alfiemitchell123</p>
                                 </div>
                             </div>
                         </div>
-
-                    </div>
-                    <div class="carousel-cards">
-                        <div class="cards">
-                            <div class="text">
-                                <p>Frontend Mentor transformed me from a newbie to a professional developer, enabling me
-                                    to create flawless, responsive, accessible websites. It’s a superb platform for
-                                    feedback with a supportive community backing your growth. Through it, I evolved from
-                                    a frontend to a full-stack developer.</p>
-                            </div>
-
-                            <div class="flex-image-section-with-text">
-                                <div class="image">
-                                    <img src="	https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-alfie.webp&w=64&q=75"
-                                        alt="not found">
-                                </div>
-                                <div class="top-heading">
-                                    <p class="with-color">Hikmah</p>
+                        <div class="review-card">
+                            <p class="review-text">"Frontend Mentor transformed me from a newbie to a professional developer. It’s a superb platform for feedback with a supportive community."</p>
+                            <div class="reviewer">
+                                <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-alfie.webp&w=64&q=75" alt="">
+                                <div class="reviewer-info">
+                                    <h4>Hikmah</h4>
                                     <p>@Hikmahx</p>
                                 </div>
                             </div>
                         </div>
-
+                        <div class="review-card">
+                            <p class="review-text">"The best investment I've made in my career. The AI feedback alone is worth the price of admission. Highly recommended for serious devs."</p>
+                            <div class="reviewer">
+                                <img src="https://www.frontendmentor.io/_next/image?url=%2Fimages%2Fhome-avatar-kevin.webp&w=128&q=75" alt="">
+                                <div class="reviewer-info">
+                                    <h4>David</h4>
+                                    <p>@david_codes</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
+            <!-- Final CTA -->
             <section class="final-section">
                 <div class="text">
-                    <h1>Join 1,167,314 people building portfolio-worthy projects</h1>
-                    <p>Our highly supportive, positive community is here to help you improve your skills. We all try to
-                        help each other out wherever possible. We’d love to welcome you to our community!</p>
-                    <button>Login with GITHUB <i aria-hidden="true" class="fa-brands fa-github text-lg"></i> </button>
+                    <h1>Join 1,167,314 people building projects</h1>
+                    <p>Our highly supportive, positive community is here to help you improve your skills. We’d love to welcome you to the next level of your career!</p>
+                    <button class="btn btn-glow ripple-btn" style="margin: 0 auto;">Login with GITHUB <i class="fa-brands fa-github"></i> </button>
                 </div>
             </section>
 
+            <!-- Footer -->
             <footer class="last-footer">
                 <div class="footer-top">
-
                     <div class="footer-brand">
                         <img src="https://www.frontendmentor.io/images/logo-desktop.svg" alt="Logo">
-                        <p>
-                            Build real-world front-end and full-stack projects that help you
-                            improve your coding skills and grow your portfolio.
-                        </p>
-
+                        <p>Build real-world front-end and full-stack projects that help you improve your coding skills and grow your portfolio.</p>
                         <div class="social-icons">
                             <a href="#"><i class="fa-brands fa-github"></i></a>
                             <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
@@ -538,41 +993,240 @@
                             <a href="#"><i class="fa-brands fa-discord"></i></a>
                         </div>
                     </div>
-
                     <div class="footer-links">
                         <h3>Explore</h3>
-                        <a href="#">Challenges</a>
-                        <a href="#">Solutions</a>
-                        <a href="#">Articles</a>
-                        <a href="#">Resources</a>
+                        <ul>
+                            <li><a href="#">Challenges</a></li>
+                            <li><a href="#">Solutions</a></li>
+                            <li><a href="#">Articles</a></li>
+                            <li><a href="#">Resources</a></li>
+                        </ul>
                     </div>
-
                     <div class="footer-links">
                         <h3>Company</h3>
-                        <a href="#">About</a>
-                        <a href="#">Careers</a>
-                        <a href="#">Blog</a>
-                        <a href="#">Contact</a>
+                        <ul>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
                     </div>
-
                     <div class="footer-links">
                         <h3>Support</h3>
-                        <a href="#">Help Center</a>
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms & Conditions</a>
-                        <a href="#">FAQ</a>
+                        <ul>
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                        </ul>
                     </div>
-
                 </div>
-
                 <div class="footer-bottom">
-                    <p>© 2026 Frontend Mentor Clone. Built with ❤️ by Faisal.</p>
+                    <p>© 2026 Frontend Mentor Premium Clone. Built with ❤️ and GSAP.</p>
                 </div>
             </footer>
         </main>
-
-
     </div>
-</body>
 
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        // --- 1. PRELOADER ---
+        window.addEventListener("load", () => {
+            const tl = gsap.timeline();
+            tl.to("#preloader", {
+                y: "-100%",
+                duration: 1,
+                ease: "power4.inOut",
+                delay: 0.5,
+                onComplete: initAnimations
+            });
+        });
+
+        // --- 2. MOBILE MENU LOGIC (NEW) ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const body = document.body;
+            
+            menu.classList.toggle('active');
+            
+            // Prevent scrolling when menu is open
+            if (menu.classList.contains('active')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = 'auto';
+            }
+        }
+
+        // --- 3. ANIMATION LOGIC ---
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Navbar Scroll Effect
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Hero Section Entrance
+            const tl = gsap.timeline();
+            tl.from(".hero-label", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" })
+              .from(".heading", { y: 50, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.6")
+              .from(".description", { y: 30, opacity: 0, duration: 0.8, ease: "power3.out" }, "-=0.6")
+              .from(".hero-btns", { y: 20, opacity: 0, duration: 0.8, ease: "power3.out" }, "-=0.6")
+              .from(".hero-img-container", { x: 50, opacity: 0, rotationY: 10, duration: 1.2, ease: "power3.out" }, "-=1");
+
+            // 3D Mouse Parallax for Hero Image (Smoothed)
+            const heroContainer = document.querySelector(".hero-wrapper");
+            const heroImg = document.getElementById("heroImageContainer");
+            
+            heroContainer.addEventListener("mousemove", (e) => {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                gsap.to(heroImg, {
+                    rotationY: xAxis,
+                    rotationX: yAxis,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            });
+
+            heroContainer.addEventListener("mouseleave", () => {
+                gsap.to(heroImg, {
+                    rotationY: -5,
+                    rotationX: 2,
+                    duration: 0.5,
+                    ease: "power2.out"
+                });
+            });
+
+            // General Fade Up Elements
+            gsap.utils.toArray('.gsap-fade-up').forEach(element => {
+                gsap.from(element, {
+                    y: 50, opacity: 0, duration: 1, ease: "power3.out",
+                    scrollTrigger: { trigger: element, start: "top 85%", toggleActions: "play none none reverse" }
+                });
+            });
+
+            // Staggered Cards
+            gsap.utils.toArray('.gsap-stagger-card').forEach((card, i) => {
+                gsap.from(card, {
+                    y: 60, opacity: 0, duration: 0.8, delay: i * 0.1, ease: "back.out(1.7)",
+                    scrollTrigger: { trigger: card, start: "top 90%" }
+                });
+            });
+
+            // Horizontal Scroll for Community Section
+            // Only pin if desktop width to avoid mobile issues
+            if(window.innerWidth > 768) {
+                gsap.to(".carousel-track", {
+                    x: () => -(document.querySelector(".carousel-track").scrollWidth - window.innerWidth + 100),
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".card-carousel",
+                        pin: true,
+                        scrub: 1,
+                        end: () => "+=" + document.querySelector(".carousel-track").scrollWidth
+                    }
+                });
+            }
+        }
+
+        // --- 4. HOW IT WORKS: INTERACTIVE CLICK LOGIC ---
+        const steps = document.querySelectorAll('.step-card');
+        const stepImage = document.getElementById('stepImage');
+        const stepTitle = document.getElementById('stepTitle');
+        const stepDesc = document.getElementById('stepDesc');
+
+        steps.forEach((step) => {
+            step.addEventListener('click', () => {
+                // Remove active class from all
+                steps.forEach(s => s.classList.remove('active-step'));
+                // Add active class to clicked
+                step.classList.add('active-step');
+
+                // Get data
+                const newImg = step.getAttribute('data-img');
+                const newTitle = step.getAttribute('data-title');
+                const newDesc = step.getAttribute('data-desc');
+
+                // Animate Image Change
+                gsap.to(stepImage, {
+                    opacity: 0,
+                    scale: 0.95,
+                    duration: 0.2,
+                    onComplete: () => {
+                        stepImage.src = newImg;
+                        gsap.to(stepImage, { opacity: 1, scale: 1, duration: 0.4 });
+                    }
+                });
+
+                // Animate Text Change
+                gsap.to('.visual-details', {
+                    opacity: 0,
+                    y: 10,
+                    duration: 0.2,
+                    onComplete: () => {
+                        stepTitle.textContent = newTitle;
+                        stepDesc.textContent = newDesc;
+                        gsap.to('.visual-details', { opacity: 1, y: 0, duration: 0.4 });
+                    }
+                });
+            });
+        });
+
+        // --- 5. PRICING TOGGLE LOGIC ---
+        function togglePricing(type) {
+            const btns = document.querySelectorAll('.btn-toggle');
+            const individualsWrapper = document.getElementById('pricing-individuals');
+            const teamsWrapper = document.getElementById('pricing-teams');
+
+            // Update Buttons
+            btns.forEach(btn => btn.classList.remove('active'));
+            if(type === 'individuals') btns[0].classList.add('active');
+            else btns[1].classList.add('active');
+
+            // Toggle Content
+            if (type === 'individuals') {
+                teamsWrapper.classList.remove('active');
+                setTimeout(() => {
+                    individualsWrapper.classList.add('active');
+                }, 100);
+            } else {
+                individualsWrapper.classList.remove('active');
+                setTimeout(() => {
+                    teamsWrapper.classList.add('active');
+                }, 100);
+            }
+        }
+
+        // --- 6. RIPPLE EFFECT ---
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+            circle.classList.add("ripple");
+
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) ripple.remove();
+            button.appendChild(circle);
+        }
+
+        const buttons = document.getElementsByClassName("ripple-btn");
+        for (const button of buttons) {
+            button.addEventListener("click", createRipple);
+        }
+
+    </script>
+</body>
 </html>
